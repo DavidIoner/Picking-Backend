@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # PostgreSQL Database
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: cnh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cnh_metodologia_picking
+      POSTGRES_USER: cnh_user
+      POSTGRES_PASSWORD: cnh_password_2025
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cnh_user -d cnh_metodologia_picking"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cnh-network
+
+  # ==========================================
+  # API .NET
+  # ==========================================
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: cnh-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=postgres;Database=cnh_metodologia_picking;User Id=cnh_user;Password=cnh_password_2025;
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cnh-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  cnh-network:
+    driver: bridge
+
+# ==========================================
+# Volumes
+# ==========================================
+volumes:
+  postgres_data:
+    driver: local

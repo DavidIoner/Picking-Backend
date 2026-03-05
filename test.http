@@ -1,0 +1,8 @@
+POST http://localhost:5123/api/readings
+Content-Type: application/json
+
+{
+  "macaddress": "60:cf:84:cf:f7:3f",
+  "data": "2025-09-22T21:30:00",
+  "leituras": [200.16, 160.44, 42.14, 155.0]
+}

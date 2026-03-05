@@ -1,0 +1,48 @@
+# Diretórios de build e output
+bin/
+obj/
+out/
+publish/
+
+# Arquivos do Visual Studio / Rider
+*.user
+*.suo
+*.userosscache
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos de configuração local
+appsettings.Development.json
+appsettings.Local.json
+*.log
+
+# Dependências e pacotes
+*.nupkg
+*.snupkg
+packages/
+node_modules/
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Arquivos de teste e cobertura
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# Arquivos de migração SQL (opcional - remova se quiser incluir)
+# *.sql
